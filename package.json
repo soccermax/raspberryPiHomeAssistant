@@ -16,12 +16,23 @@
     "react-scripts": "3.4.3",
     "recharts": "^1.8.5"
   },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^5.12.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.21.5",
+    "prettier": "^2.1.2"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy:frontend": "npm run build && firebase deploy --only hosting"
+    "deploy:frontend": "npm run build && firebase deploy --only hosting",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:prettier": "prettier \"**/*.{js,json,md,yml,yaml,html}\" --write --loglevel error",
+    "lint:eslint": "eslint . --fix"
   },
   "eslintConfig": {
     "extends": "react-app"

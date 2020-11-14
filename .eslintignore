@@ -1,0 +1,7 @@
+node_modules/
+functions/
+build/
+public/
+*test.js
+serviceWorker.js
+setupTests.js

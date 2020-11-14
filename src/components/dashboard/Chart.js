@@ -1,7 +1,7 @@
-import React from 'react';
-import { useTheme } from '@material-ui/core/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
-import Title from './Title';
+import React, { useState } from "react";
+import { useTheme } from "@material-ui/core/styles";
+import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from "recharts";
+import Title from "./Title";
 
 // Generate Sales Data
 function createData(time, amount) {
@@ -9,18 +9,22 @@ function createData(time, amount) {
 }
 
 const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-  createData('24:00', undefined),
+  createData("00:00", 0),
+  createData("03:00", 300),
+  createData("06:00", 600),
+  createData("09:00", 800),
+  createData("12:00", 1500),
+  createData("15:00", 2000),
+  createData("18:00", 2400),
+  createData("21:00", 2400),
+  createData("24:00", undefined),
 ];
 
 export default function Chart() {
+  // eslint-disable-next-line no-unused-vars
+  const [isFetching, setIsFetching] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [chartData, setChartData] = useState([]);
   const theme = useTheme();
 
   return (
@@ -38,11 +42,7 @@ export default function Chart() {
         >
           <XAxis dataKey="time" stroke={theme.palette.text.secondary} />
           <YAxis stroke={theme.palette.text.secondary}>
-            <Label
-              angle={270}
-              position="left"
-              style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
-            >
+            <Label angle={270} position="left" style={{ textAnchor: "middle", fill: theme.palette.text.primary }}>
               Sales ($)
             </Label>
           </YAxis>
