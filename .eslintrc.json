@@ -4,5 +4,8 @@
     // Required for certain syntax usages
     "ecmaVersion": 2017
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"]
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "rules": {
+    "react/prop-types": "off"
+  }
 }

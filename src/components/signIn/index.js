@@ -49,7 +49,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
   googleSignInButton: {
-    margin: theme.spacing(3, 12, 0),
+    margin: "auto",
+    marginTop: "10px"
   },
 }));
 
@@ -91,7 +92,6 @@ export default function SignInSide() {
               id="password"
               autoComplete="current-password"
             />
-            <GoogleButton className={classes.googleSignInButton} onClick={signInWithGoogle} />
             <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
               Sign In
             </Button>
@@ -107,6 +107,7 @@ export default function SignInSide() {
                 </Link>
               </Grid>
             </Grid>
+            <GoogleButton className={classes.googleSignInButton} onClick={signInWithGoogle} />
             <Box mt={5}>
               <Copyright />
             </Box>
