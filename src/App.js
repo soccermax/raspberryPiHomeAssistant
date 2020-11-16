@@ -36,26 +36,9 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={darkTheme}>
-        {user ? (
-          <header className="headerChatroom">
-            <SignOut />
-          </header>
-        ) : (
-          ""
-        )}
         <section>{user ? <Dashboard /> : <SignIn />}</section>
       </ThemeProvider>
     </div>
-  );
-}
-
-function SignOut() {
-  return (
-    auth.currentUser && (
-      <button className="singOut" onClick={() => auth.signOut()}>
-        Sign Out
-      </button>
-    )
   );
 }
 
