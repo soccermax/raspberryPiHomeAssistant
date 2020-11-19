@@ -26,7 +26,6 @@ const auth = firebase.auth();
 
 function App() {
   const [user] = useAuthState(auth);
-
   const darkTheme = createMuiTheme({
     palette: {
       type: "dark",
@@ -36,7 +35,7 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={darkTheme}>
-        <section>{user ? <Dashboard /> : <SignIn />}</section>
+        <section>{user ? <Dashboard user={user} /> : <SignIn />}</section>
       </ThemeProvider>
     </div>
   );

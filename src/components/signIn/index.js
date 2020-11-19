@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   googleSignInButton: {
     margin: "auto",
-    marginTop: "10px"
+    marginTop: "10px",
   },
 }));
 
