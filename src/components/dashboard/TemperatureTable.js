@@ -15,39 +15,39 @@ import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   loadingIndicator: {
-    margin: "auto"
-  }
+    margin: "auto",
+  },
 }));
 
 const LoadingIndicator = (props) => {
   return (
     <React.Fragment>
       <div className={props.classes.loadingIndicator}>
-        <CircularProgress/>
+        <CircularProgress />
       </div>
     </React.Fragment>
   );
 };
 
-const TemperatureTableComponent = ({ classes, data, temperaturesToDisplayedState,snackBarOpenState  }) => {
-  const {temperaturesToDisplayed, setTemperaturesToDisplayed} = temperaturesToDisplayedState;
-  const {snackBarOpen, setOpenSnackBarOpen} = snackBarOpenState;
+const TemperatureTableComponent = ({ classes, data, temperaturesToDisplayedState, snackBarOpenState }) => {
+  const { temperaturesToDisplayed, setTemperaturesToDisplayed } = temperaturesToDisplayedState;
+  const { snackBarOpen, setOpenSnackBarOpen } = snackBarOpenState;
   const dataToBeDisplayed = data.slice(data.length - temperaturesToDisplayed, data.length);
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setOpenSnackBarOpen(false);
   };
   const loadMoreTemperatures = () => {
     if (temperaturesToDisplayed + 10 > data.length) {
-      temperaturesToDisplayed === data.length && setOpenSnackBarOpen(true)
+      temperaturesToDisplayed === data.length && setOpenSnackBarOpen(true);
       return setTemperaturesToDisplayed(data.length);
     }
-    setTemperaturesToDisplayed(prevState => prevState + 10);
+    setTemperaturesToDisplayed((prevState) => prevState + 10);
   };
   return (
     <React.Fragment>
@@ -77,10 +77,10 @@ const TemperatureTableComponent = ({ classes, data, temperaturesToDisplayedState
           Load more temperatures
         </Link>
       </div>
-            <Snackbar
+      <Snackbar
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "left"
+          horizontal: "left",
         }}
         open={snackBarOpen}
         autoHideDuration={3000}
@@ -89,7 +89,7 @@ const TemperatureTableComponent = ({ classes, data, temperaturesToDisplayedState
         action={
           <React.Fragment>
             <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-              <CloseIcon fontSize="small"/>
+              <CloseIcon fontSize="small" />
             </IconButton>
           </React.Fragment>
         }
@@ -103,10 +103,13 @@ export default function TemperatureTable({ isFetching, data }) {
   const [temperaturesToDisplayed, setTemperaturesToDisplayed] = useState(10);
   const [snackBarOpen, setOpenSnackBarOpen] = React.useState(false);
   return isFetching ? (
-    <LoadingIndicator classes={classes}/>
+    <LoadingIndicator classes={classes} />
   ) : (
-    <TemperatureTableComponent classes={classes} data={data}
-                               temperaturesToDisplayedState={{temperaturesToDisplayed, setTemperaturesToDisplayed}}
-                               snackBarOpenState={{ snackBarOpen, setOpenSnackBarOpen  }}/>
+    <TemperatureTableComponent
+      classes={classes}
+      data={data}
+      temperaturesToDisplayedState={{ temperaturesToDisplayed, setTemperaturesToDisplayed }}
+      snackBarOpenState={{ snackBarOpen, setOpenSnackBarOpen }}
+    />
   );
 }

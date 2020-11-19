@@ -7,9 +7,11 @@ import "firebase/auth";
 
 import SignIn from "./components/signIn/index";
 import Dashboard from "./components/dashboard/Dashboard";
+import Loading from "./components/loadingPage";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { SignalCellular0Bar } from "@material-ui/icons";
 
 //TODO: move to env
 firebase.initializeApp({
@@ -25,7 +27,9 @@ firebase.initializeApp({
 const auth = firebase.auth();
 
 function App() {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
+  console.log(loading);
+  console.log(user);
   const darkTheme = createMuiTheme({
     palette: {
       type: "dark",
@@ -35,7 +39,7 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={darkTheme}>
-        <section>{user ? <Dashboard user={user} /> : <SignIn />}</section>
+        <section>{loading ? <Loading /> : user ? <Dashboard user={user} /> : <SignIn />}</section>
       </ThemeProvider>
     </div>
   );
