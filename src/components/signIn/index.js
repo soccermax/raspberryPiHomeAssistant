@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -16,9 +16,9 @@ import "firebase/auth";
 
 import Copyright from "../copyright";
 
-const signInWithGoogle = () => {
-  firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
-};
+const signInWithGoogle = () => firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+
+const signInWithEmailAndPassword = (email, password) => firebase.auth().signInWithEmailAndPassword(email, password);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,6 +56,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignInSide() {
   const classes = useStyles();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -79,6 +81,7 @@ export default function SignInSide() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              onChange={(e) => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -90,9 +93,20 @@ export default function SignInSide() {
               label="Password"
               type="password"
               id="password"
+              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
             />
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+            <Button
+              type="submit"
+              onClick={(e) => {
+                e.preventDefault();
+                signInWithEmailAndPassword(email, password);
+              }}
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
               Sign In
             </Button>
             <Grid container>

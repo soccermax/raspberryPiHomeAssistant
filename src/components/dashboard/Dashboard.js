@@ -143,9 +143,9 @@ export default function Dashboard({ user }) {
   const [chartData, setChartData] = useState([]);
   //TODO: remove handler after unmount
   let counter = 0;
+  const databaseRef = firebase.database().ref("/temperature");
   useEffect(() => {
     const fetchData = async () => {
-      const databaseRef = firebase.database().ref("/temperature");
       const readNewData = async () => {
         const snapshot = await databaseRef.once("value");
         const result = [];
@@ -167,6 +167,9 @@ export default function Dashboard({ user }) {
         });
     };
     fetchData();
+    return () => {
+      databaseRef.off();
+    };
   }, []);
 
   return (
@@ -231,10 +234,7 @@ export default function Dashboard({ user }) {
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <TemperatureTable
-                  isFetching={isFetching}
-                  data={chartData}
-                />
+                <TemperatureTable isFetching={isFetching} data={chartData} />
               </Paper>
             </Grid>
           </Grid>
