@@ -233,7 +233,7 @@ export default function Dashboard({ user }) {
               <Paper className={classes.paper}>
                 <TemperatureTable
                   isFetching={isFetching}
-                  data={chartData.slice(chartData.length - 10, chartData.length)}
+                  data={chartData}
                 />
               </Paper>
             </Grid>
