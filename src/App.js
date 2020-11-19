@@ -28,8 +28,6 @@ const auth = firebase.auth();
 
 function App() {
   const [user, loading] = useAuthState(auth);
-  console.log(loading);
-  console.log(user);
   const darkTheme = createMuiTheme({
     palette: {
       type: "dark",
