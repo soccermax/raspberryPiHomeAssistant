@@ -7,7 +7,7 @@ export default function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
-        Hot Green Russian Luxury Escort Import AG
+        Home Assistant
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}

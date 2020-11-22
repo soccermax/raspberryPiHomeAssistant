@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 import firebase from "firebase/app";
@@ -6,27 +6,28 @@ import "firebase/firestore";
 import "firebase/auth";
 
 import SignIn from "./components/signIn/index";
+import SignUp from "./components/signUp";
 import Dashboard from "./components/dashboard/Dashboard";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import LoadingPage from "./components/loadingPage";
 
-//TODO: move to env
 firebase.initializeApp({
-  apiKey: "AIzaSyC-_LY36jhUJivQv73hA1Nhe8ITA3lqRhE",
-  authDomain: "raspberrypihomeassistant-ba207.firebaseapp.com",
-  databaseURL: "https://raspberrypihomeassistant-ba207.firebaseio.com",
-  projectId: "raspberrypihomeassistant-ba207",
-  storageBucket: "raspberrypihomeassistant-ba207.appspot.com",
-  messagingSenderId: "775362468335",
-  appId: "1:775362468335:web:abe70711ab522695b7be1a",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
 });
 
 const auth = firebase.auth();
 
 function App() {
-  const [user] = useAuthState(auth);
-
+  const [user, loading] = useAuthState(auth);
+  const [userWantsToSignUp, setUserWantsToSignUp] = useState(false);
   const darkTheme = createMuiTheme({
     palette: {
       type: "dark",
@@ -36,7 +37,17 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={darkTheme}>
-        <section>{user ? <Dashboard /> : <SignIn />}</section>
+        <section>
+          {loading ? (
+            <LoadingPage />
+          ) : user ? (
+            <Dashboard user={user} />
+          ) : userWantsToSignUp ? (
+            <SignUp setUserWantsToSignUp={setUserWantsToSignUp} />
+          ) : (
+            <SignIn setUserWantsToSignUp={setUserWantsToSignUp} />
+          )}
+        </section>
       </ThemeProvider>
     </div>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -15,6 +15,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 
 import Copyright from "../copyright";
+import Snackbar from "../snackbar";
 
 const signInWithGoogle = () => {
   firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
@@ -22,49 +23,70 @@ const signInWithGoogle = () => {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100vh",
+    height: "100vh"
   },
   image: {
     backgroundImage: "url(https://source.unsplash.com/random)",
     backgroundRepeat: "no-repeat",
     backgroundColor: theme.palette.type === "light" ? theme.palette.grey[50] : theme.palette.grey[900],
     backgroundSize: "cover",
-    backgroundPosition: "center",
+    backgroundPosition: "center"
   },
   paper: {
     margin: theme.spacing(8, 4),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "center"
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.main
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 0, 2)
   },
   googleSignInButton: {
     margin: "auto",
-    marginTop: "10px",
-  },
+    marginTop: "10px"
+  }
 }));
 
-export default function SignInSide() {
+export default function SignInSide({ setUserWantsToSignUp }) {
   const classes = useStyles();
+  const [mailAddress, setMailAddress] = useState("");
+  const [password, setPassword] = useState("");
+    const [snackbarState, setSnackbarState] = useState({
+    shouldBeOpen: false,
+    message: ""
+  });
+  const signInWithEmailAndPassword = async (event) => {
+    event.preventDefault();
+    firebase.auth().signInWithEmailAndPassword(mailAddress, password)
+      .then((user) => {
+        // Signed in
+        // ...
+      })
+      .catch((err) => {
+        setSnackbarState({
+          shouldBeOpen: true,
+          message: err.message
+        });
+      });
+
+  };
 
   return (
     <Grid container component="main" className={classes.root}>
-      <CssBaseline />
-      <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      <CssBaseline/>
+      <Grid item xs={false} sm={4} md={7} className={classes.image}/>
+      <Grid item xs={12} sm={8} md={5} elevation={6}>
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <LockOutlinedIcon/>
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign in
@@ -80,6 +102,8 @@ export default function SignInSide() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={(event) => setMailAddress(event.target.value)}
+
             />
             <TextField
               variant="outlined"
@@ -91,8 +115,11 @@ export default function SignInSide() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(event) => setPassword(event.target.value)}
+
             />
-            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
+            <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}
+                    onClick={signInWithEmailAndPassword}>
               Sign In
             </Button>
             <Grid container>
@@ -102,16 +129,17 @@ export default function SignInSide() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="#" variant="body2" onClick={() => setUserWantsToSignUp(true)}>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
             </Grid>
-            <GoogleButton className={classes.googleSignInButton} onClick={signInWithGoogle} />
+            <GoogleButton className={classes.googleSignInButton} onClick={signInWithGoogle}/>
             <Box mt={5}>
-              <Copyright />
+              <Copyright/>
             </Box>
           </form>
+          <Snackbar state={{ snackbarState, setSnackbarState }}/>
         </div>
       </Grid>
     </Grid>

@@ -34,10 +34,10 @@ const DepositsComponent = ({ currentTemperature, classes }) => {
     <React.Fragment>
       <Title>Current Temperature</Title>
       <Typography component="p" variant="h4">
-        {`${currentTemperature.temperature} °C`}
+        {`${currentTemperature ? currentTemperature.temperature : "0"} °C`}
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        {formatDate(currentTemperature)}
+        {formatDate(currentTemperature ? currentTemperature : Date.now() / 1000)}
       </Typography>
     </React.Fragment>
   );
