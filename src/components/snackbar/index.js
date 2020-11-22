@@ -13,7 +13,7 @@ export default function Snackbar({ state }) {
 
     setSnackbarState({
       shouldBeOpen: false,
-      message: ""
+      message: "",
     });
   };
 
@@ -22,7 +22,7 @@ export default function Snackbar({ state }) {
       <SnackbarMaterial
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "right"
+          horizontal: "right",
         }}
         open={snackbarState.shouldBeOpen}
         autoHideDuration={6000}
@@ -31,7 +31,7 @@ export default function Snackbar({ state }) {
         action={
           <React.Fragment>
             <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-              <CloseIcon fontSize="small"/>
+              <CloseIcon fontSize="small" />
             </IconButton>
           </React.Fragment>
         }

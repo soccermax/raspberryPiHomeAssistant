@@ -22,19 +22,19 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 export default function SignUp({ setUserWantsToSignUp }) {
@@ -45,33 +45,35 @@ export default function SignUp({ setUserWantsToSignUp }) {
   const [password, setPassword] = useState("");
   const [snackbarState, setSnackbarState] = useState({
     shouldBeOpen: false,
-    message: ""
+    message: "",
   });
 
   const signUpWithEmailAndPassword = async (event) => {
     event.preventDefault();
-    firebase.auth().createUserWithEmailAndPassword(mailAddress, password)
-      .then(user => {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(mailAddress, password)
+      .then((user) => {
         firebase.firestore().collection("users").doc(user.user.uid).set({
           firstName,
-          lastName
+          lastName,
         });
         setUserWantsToSignUp(false);
       })
-      .catch(err => {
+      .catch((err) => {
         setSnackbarState({
           shouldBeOpen: true,
-          message: err.message
+          message: err.message,
         });
       });
   };
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline/>
+      <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon/>
+          <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
@@ -130,13 +132,19 @@ export default function SignUp({ setUserWantsToSignUp }) {
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary"/>}
+                control={<Checkbox value="allowExtraEmails" color="primary" />}
                 label="I want to receive inspiration, marketing promotions and updates via email."
               />
             </Grid>
           </Grid>
-          <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}
-                  onClick={signUpWithEmailAndPassword}>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={signUpWithEmailAndPassword}
+          >
             Sign Up
           </Button>
           <Grid container justify="flex-end">
@@ -147,10 +155,10 @@ export default function SignUp({ setUserWantsToSignUp }) {
             </Grid>
           </Grid>
         </form>
-        <Snackbar state={{ snackbarState, setSnackbarState }}/>
+        <Snackbar state={{ snackbarState, setSnackbarState }} />
       </div>
       <Box mt={5}>
-        <Copyright/>
+        <Copyright />
       </Box>
     </Container>
   );

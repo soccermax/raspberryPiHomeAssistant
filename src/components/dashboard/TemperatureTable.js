@@ -13,18 +13,18 @@ import Snackbar from "../snackbar";
 
 const useStyles = makeStyles((theme) => ({
   seeMore: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   loadingIndicator: {
-    margin: "auto"
-  }
+    margin: "auto",
+  },
 }));
 
 const LoadingIndicator = (props) => {
   return (
     <React.Fragment>
       <div className={props.classes.loadingIndicator}>
-        <CircularProgress/>
+        <CircularProgress />
       </div>
     </React.Fragment>
   );
@@ -34,14 +34,14 @@ const TemperatureTableComponent = ({ classes, data }) => {
   const [temperaturesToBeDisplayed, setTemperaturesToBeDisplayed] = useState(10);
   const [snackbarState, setSnackbarState] = useState({
     shouldBeOpen: false,
-    message: ""
+    message: "",
   });
   const slicedData = data.slice(data.length - temperaturesToBeDisplayed, data.length).reverse();
   const loadMoreTemperatures = () => {
     if (data.length === temperaturesToBeDisplayed) {
       setSnackbarState({
         shouldBeOpen: true,
-        message: "All temperatures have been already loaded!"
+        message: "All temperatures have been already loaded!",
       });
     }
     setTemperaturesToBeDisplayed((prevState) => (prevState + 10 > data.length ? data.length : prevState + 10));
@@ -73,7 +73,7 @@ const TemperatureTableComponent = ({ classes, data }) => {
         <Link color="primary" href="#" onClick={loadMoreTemperatures}>
           See old temperatures
         </Link>
-        <Snackbar state={{ snackbarState, setSnackbarState }}/>
+        <Snackbar state={{ snackbarState, setSnackbarState }} />
       </div>
     </React.Fragment>
   );
@@ -82,8 +82,8 @@ const TemperatureTableComponent = ({ classes, data }) => {
 export default function TemperatureTable({ isFetching, data }) {
   const classes = useStyles();
   return isFetching ? (
-    <LoadingIndicator classes={classes}/>
+    <LoadingIndicator classes={classes} />
   ) : (
-    <TemperatureTableComponent classes={classes} data={data}/>
+    <TemperatureTableComponent classes={classes} data={data} />
   );
 }
