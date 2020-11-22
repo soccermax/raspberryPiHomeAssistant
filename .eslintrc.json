@@ -1,11 +1,13 @@
 {
   "parser": "babel-eslint",
   "parserOptions": {
-    // Required for certain syntax usages
-    "ecmaVersion": 2017
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "rules": {
-    "react/prop-types": "off"
+    "semi": "error"
   }
 }
