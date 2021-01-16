@@ -17,17 +17,32 @@ import Paper from "@material-ui/core/Paper";
 import MenuIcon from "@material-ui/icons/Menu";
 import Button from "@material-ui/core/Button";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import { mainListItems, secondaryListItems } from "./listItems";
+import { secondaryListItems } from "./listItems";
 import Chart from "./Chart";
 import Deposits from "./Deposits";
+import Bulb from "./Bulb";
 import TemperatureTable from "./TemperatureTable";
 import Copyright from "../copyright";
 import firebase from "firebase/app";
 import "firebase/database";
 import Avatar from "@material-ui/core/Avatar";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import ListItemText from "@material-ui/core/ListItemText";
+import EmojiObjectsIcon from "@material-ui/icons/EmojiObjects";
+import LayersIcon from "@material-ui/icons/Layers";
+import axios from "axios";
+import Skeleton from "@material-ui/lab/Skeleton";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const drawerWidth = 240;
+
+const PAGES = {
+  TEMPERATURES: "temperatureChart",
+  BULBS: "bulbs",
+  VACUUM: "vacuum"
+};
 
 const Logout = ({ classes }) => {
   const auth = firebase.auth();
@@ -42,45 +57,45 @@ const Logout = ({ classes }) => {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
+    display: "flex"
   },
   toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
+    paddingRight: 24 // keep right padding when drawer closed
   },
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
-    ...theme.mixins.toolbar,
+    ...theme.mixins.toolbar
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
+      duration: theme.transitions.duration.leavingScreen
+    })
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+      duration: theme.transitions.duration.enteringScreen
+    })
   },
   menuButton: {
-    marginRight: 36,
+    marginRight: 36
   },
   logoutButton: {
     marginLeft: 30,
-    marginRight: 30,
+    marginRight: 30
   },
   menuButtonHidden: {
-    display: "none",
+    display: "none"
   },
   title: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   drawerPaper: {
     position: "relative",
@@ -88,45 +103,143 @@ const useStyles = makeStyles((theme) => ({
     width: drawerWidth,
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+      duration: theme.transitions.duration.enteringScreen
+    })
   },
   drawerPaperClose: {
     overflowX: "hidden",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+      duration: theme.transitions.duration.leavingScreen
     }),
     width: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
-      width: theme.spacing(9),
-    },
+      width: theme.spacing(9)
+    }
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto",
+    overflow: "auto"
   },
   container: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    paddingBottom: theme.spacing(4)
+  },
+  container2: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4)
+  },
+  container3: {
+    marginTop: 100,
+    paddingTop: 100
   },
   paper: {
     padding: theme.spacing(2),
     display: "flex",
     overflow: "auto",
-    flexDirection: "column",
+    flexDirection: "column"
   },
   fixedHeight: {
-    height: 240,
+    height: 240
   },
+  fixedHeightBulbs: {
+    height: 530
+  },
+
+  loadingIndicator: {
+    margin: "auto"
+  }
 }));
+
+const TemperaturesComponent = ({ classes, fixedHeightPaper, isFetching, temperaturesState }) => {
+  return (
+    <Container maxWidth="lg" className={classes.container}>
+      <Grid container spacing={3}>
+        {/* Temperatures Chart */}
+        <Grid item xs={12} md={8} lg={9}>
+          <Paper className={fixedHeightPaper}>
+            <Chart isFetching={isFetching} chartData={temperaturesState}/>
+          </Paper>
+        </Grid>
+        {/* Current Temperature */}
+        <Grid item xs={12} md={4} lg={3}>
+          <Paper className={fixedHeightPaper}>
+            <Deposits isFetching={isFetching} currentTemperature={temperaturesState[temperaturesState.length - 1]}/>
+          </Paper>
+        </Grid>
+        {/* Temperature Table */}
+        <Grid item xs={12}>
+          <Paper className={classes.paper}>
+            <TemperatureTable isFetching={isFetching} data={temperaturesState}/>
+          </Paper>
+        </Grid>
+      </Grid>
+      <Grid container
+            direction="row"
+            justify="center"
+            alignItems="flex-end">
+        <Grid item xs={12}>
+          <Box pt={4}>
+            <Copyright/>
+          </Box>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
+
+const LoadingIndicator = () => {
+  return (
+      <Grid container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            style={{height: "100%"}}>
+        <Grid align="center" item xs={12} md={4} lg={3}>
+            <CircularProgress/>
+        </Grid>
+      </Grid>);
+};
+
+const Bulbs = ({ classes, fixedHeightPaper, isFetching, bulbs, setBulbs, isFetchingBulbs }) => {
+  if (isFetchingBulbs) {
+    return <LoadingIndicator />;
+  }
+  return (
+    <Container maxWidth="lg" className={classes.container2}>
+      <Grid container spacing={3} direction="row" alignItems="center" justify="center">
+        {/* Bulbs */}
+        {bulbs.length > 0 &&
+        bulbs.map((bulb) => {
+          return (
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper className={fixedHeightPaper}>
+                <Bulb isFetching={isFetching} bulb={bulb} setBulbs={setBulbs}/>
+              </Paper>
+            </Grid>
+          );
+        })}
+      </Grid>
+      <Box pt={4}>
+        <Copyright/>
+      </Box>
+    </Container>
+  );
+};
+
+const getBulbs = async () => {
+  const result = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/getAllBulbs`);
+  return result.data;
+};
 
 export default function Dashboard({ user }) {
   const classes = useStyles();
   const db = firebase.firestore();
   const [open, setOpen] = React.useState(false);
+  const [currentPage, setCurrentPage] = React.useState(PAGES.BULBS);
+  const [bulbs, setBulbs] = React.useState([]);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -134,8 +247,10 @@ export default function Dashboard({ user }) {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaperBulbs = clsx(classes.paper, classes.fixedHeightBulbs);
 
   const [isFetching, setIsFetching] = useState(true);
+  const [isFetchingBulbs, setIsFetchingBulbs] = useState(true);
   const [temperaturesState, setTemperaturesState] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -149,7 +264,10 @@ export default function Dashboard({ user }) {
         });
       });
       setTemperaturesState(temperaturesData);
-      setIsFetching(false);
+      setTimeout(() => setIsFetching(false), 1000);
+      const allBulbs = await getBulbs();
+      setIsFetchingBulbs(false);
+      setBulbs(() => allBulbs);
       db.collection("temperatures")
         .where("timestamp", ">", temperaturesData[temperaturesData.length - 1].timestamp)
         .onSnapshot((querySnapshot) => {
@@ -168,7 +286,7 @@ export default function Dashboard({ user }) {
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
+      <CssBaseline/>
       <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <IconButton
@@ -178,67 +296,72 @@ export default function Dashboard({ user }) {
             onClick={handleDrawerOpen}
             className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
-            <MenuIcon />
+            <MenuIcon/>
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Dashboard
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={8} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <Logout classes={classes} />
-          <Avatar alt="Remy Sharp" src={user.photoURL} />
+          <Logout classes={classes}/>
+          <Avatar alt="Remy Sharp" src={user.photoURL}/>
         </Toolbar>
       </AppBar>
       <Drawer
         variant="permanent"
         classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose)
         }}
         open={open}
       >
         <div className={classes.toolbarIcon}>
           <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
+            <ChevronLeftIcon/>
           </IconButton>
         </div>
-        <Divider />
-        <List>{mainListItems}</List>
-        <Divider />
-        <List>{secondaryListItems}</List>
+        <Divider/>
+        <List>
+          <div>
+            <ListItem button onClick={() => setCurrentPage(() => PAGES.TEMPERATURES)}>
+              <ListItemIcon>
+                <DashboardIcon/>
+              </ListItemIcon>
+              <ListItemText primary="Temperatures"/>
+            </ListItem>
+            <ListItem button onClick={() => setCurrentPage(() => PAGES.BULBS)}>
+              <ListItemIcon>
+                <EmojiObjectsIcon/>
+              </ListItemIcon>
+              <ListItemText primary="Bulbs"/>
+            </ListItem>
+            <ListItem button>
+              <ListItemIcon>
+                <LayersIcon/>
+              </ListItemIcon>
+              <ListItemText primary="Vacuum"/>
+            </ListItem>
+          </div>
+        </List>
+        <Divider/>
       </Drawer>
       <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <Chart isFetching={isFetching} chartData={temperaturesState} />
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits
-                  isFetching={isFetching}
-                  currentTemperature={temperaturesState[temperaturesState.length - 1]}
-                />
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <TemperatureTable isFetching={isFetching} data={temperaturesState} />
-              </Paper>
-            </Grid>
-          </Grid>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-        </Container>
+        <div className={classes.appBarSpacer}/>
+        {currentPage === PAGES.TEMPERATURES && (
+          <TemperaturesComponent
+            classes={classes}
+            fixedHeightPaper={fixedHeightPaper}
+            isFetching={isFetching}
+            temperaturesState={temperaturesState}
+          />
+        )}
+        {currentPage === PAGES.BULBS && (
+          <Bulbs
+            classes={classes}
+            fixedHeightPaper={fixedHeightPaperBulbs}
+            isFetching={isFetching}
+            bulbs={bulbs}
+            setBulbs={setBulbs}
+            isFetchingBulbs={isFetchingBulbs}
+          />
+        )}
       </main>
     </div>
   );

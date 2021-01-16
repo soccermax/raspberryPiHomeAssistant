@@ -20,7 +20,7 @@ firebase.initializeApp({
   projectId: process.env.REACT_APP_PROJECT_ID,
   storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
   messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_APP_ID,
+  appId: process.env.REACT_APP_APP_ID
 });
 
 const auth = firebase.auth();
@@ -30,8 +30,8 @@ function App() {
   const [userWantsToSignUp, setUserWantsToSignUp] = useState(false);
   const darkTheme = createMuiTheme({
     palette: {
-      type: "dark",
-    },
+      type: "dark"
+    }
   });
 
   return (
@@ -39,13 +39,13 @@ function App() {
       <ThemeProvider theme={darkTheme}>
         <section>
           {loading ? (
-            <LoadingPage />
+            <LoadingPage/>
           ) : user ? (
-            <Dashboard user={user} />
+            <Dashboard user={user}/>
           ) : userWantsToSignUp ? (
-            <SignUp setUserWantsToSignUp={setUserWantsToSignUp} />
+            <SignUp setUserWantsToSignUp={setUserWantsToSignUp}/>
           ) : (
-            <SignIn setUserWantsToSignUp={setUserWantsToSignUp} />
+            <SignIn setUserWantsToSignUp={setUserWantsToSignUp}/>
           )}
         </section>
       </ThemeProvider>

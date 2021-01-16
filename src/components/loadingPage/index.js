@@ -4,13 +4,13 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 
 const useStyles = makeStyles(() => ({
   root: {
-    display: "flex",
+    display: "flex"
   },
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto",
-  },
+    overflow: "auto"
+  }
 }));
 
 export default function LoadingPage() {
@@ -18,7 +18,7 @@ export default function LoadingPage() {
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
+      <CssBaseline/>
       <main className={classes.content}></main>
     </div>
   );
