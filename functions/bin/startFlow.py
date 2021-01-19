@@ -15,7 +15,7 @@ transitions = [
 ]
 
 flow = Flow(
-    count=1,
+    count=2,
     transitions=transitions
 )
 

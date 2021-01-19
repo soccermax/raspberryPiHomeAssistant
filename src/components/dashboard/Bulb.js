@@ -89,13 +89,11 @@ const BulbComponent = ({ classes, bulb, setBulbs }) => {
   const [brightness, setBrightness] = React.useState(bulb.capabilities.bright);
   const [brightnessSlider, setBrightnessSlider] = React.useState(bulb.capabilities.bright);
   const [color, setColor] = React.useState(`#${parseInt(bulb.capabilities.rgb).toString(16)}`);
-  console.log(parseInt(bulb.capabilities.rgb).toString(16));
   const handleChangeSlider = (event, newValue) => {
     setBrightnessSlider(newValue);
   };
 
   const handleChange = (event, newValue) => {
-    console.log(newValue);
     setBrightness(newValue);
     setBrightnessBulb(bulb.ip, newValue, setBulbs);
   };
@@ -132,7 +130,6 @@ const BulbComponent = ({ classes, bulb, setBulbs }) => {
       <div className={classes.seeMore}>
         <Typography className={classes.root}>
           <Link
-            href="#"
             onClick={() => toogleBulb(bulb.ip, bulb.capabilities.power === "off" ? "On" : "Off", setBulbs)}
           >
             {`Turn bulb ${bulb.capabilities.power === "off" ? "on" : "off"}`}

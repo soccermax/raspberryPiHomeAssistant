@@ -192,20 +192,20 @@ const TemperaturesComponent = ({ classes, fixedHeightPaper, isFetching, temperat
 
 const LoadingIndicator = () => {
   return (
-      <Grid container
-            direction="row"
-            justify="center"
-            alignItems="center"
-            style={{height: "100%"}}>
-        <Grid align="center" item xs={12} md={4} lg={3}>
-            <CircularProgress/>
-        </Grid>
-      </Grid>);
+    <Grid container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          style={{ height: "100%" }}>
+      <Grid align="center" item xs={12} md={4} lg={3}>
+        <CircularProgress/>
+      </Grid>
+    </Grid>);
 };
 
 const Bulbs = ({ classes, fixedHeightPaper, isFetching, bulbs, setBulbs, isFetchingBulbs }) => {
   if (isFetchingBulbs) {
-    return <LoadingIndicator />;
+    return <LoadingIndicator/>;
   }
   return (
     <Container maxWidth="lg" className={classes.container2}>
@@ -238,7 +238,7 @@ export default function Dashboard({ user }) {
   const classes = useStyles();
   const db = firebase.firestore();
   const [open, setOpen] = React.useState(false);
-  const [currentPage, setCurrentPage] = React.useState(PAGES.BULBS);
+  const [currentPage, setCurrentPage] = React.useState(PAGES.TEMPERATURES);
   const [bulbs, setBulbs] = React.useState([]);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -246,6 +246,7 @@ export default function Dashboard({ user }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  console.log(process.env.NODE_ENV);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fixedHeightPaperBulbs = clsx(classes.paper, classes.fixedHeightBulbs);
 
@@ -260,12 +261,12 @@ export default function Dashboard({ user }) {
       temperaturesSnapshot.forEach((doc) => {
         temperaturesData.push({
           ...doc.data(),
-          time: counter++,
+          time: counter++
         });
       });
       setTemperaturesState(temperaturesData);
       setTimeout(() => setIsFetching(false), 1000);
-      const allBulbs = await getBulbs();
+      const allBulbs = process.env.NODE_ENV === "production" ? [] : await getBulbs();
       setIsFetchingBulbs(false);
       setBulbs(() => allBulbs);
       db.collection("temperatures")
@@ -275,7 +276,7 @@ export default function Dashboard({ user }) {
             const newTemperaturesData = [];
             newTemperaturesData.push({
               ...change.doc.data(),
-              time: counter++,
+              time: counter++
             });
             setTemperaturesState((prevState) => [...prevState, ...newTemperaturesData]);
           });
@@ -326,13 +327,14 @@ export default function Dashboard({ user }) {
               </ListItemIcon>
               <ListItemText primary="Temperatures"/>
             </ListItem>
-            <ListItem button onClick={() => setCurrentPage(() => PAGES.BULBS)}>
+            <ListItem disabled={process.env.NODE_ENV === "production" ? true : false} button
+                      onClick={() => setCurrentPage(() => PAGES.BULBS)}>
               <ListItemIcon>
                 <EmojiObjectsIcon/>
               </ListItemIcon>
               <ListItemText primary="Bulbs"/>
             </ListItem>
-            <ListItem button>
+            <ListItem disabled={process.env.NODE_ENV === "production" ? true : false} button>
               <ListItemIcon>
                 <LayersIcon/>
               </ListItemIcon>

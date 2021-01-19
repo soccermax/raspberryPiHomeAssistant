@@ -70,7 +70,7 @@ const TemperatureTableComponent = ({ classes, data }) => {
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={loadMoreTemperatures}>
+        <Link color="primary" onClick={loadMoreTemperatures}>
           See old temperatures
         </Link>
         <Snackbar state={{ snackbarState, setSnackbarState }} />

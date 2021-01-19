@@ -13,7 +13,6 @@ const useStyles = makeStyles(() => ({
 }));
 
 const formatDate = ({ timestamp }) => {
-  console.log(timestamp);
   return moment.unix(timestamp).format("HH:mm:ss");
 };
 
