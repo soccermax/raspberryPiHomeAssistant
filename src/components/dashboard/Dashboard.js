@@ -327,7 +327,7 @@ export default function Dashboard({ user }) {
               <ListItemText primary="Temperatures"/>
             </ListItem>
             <ListItem disabled={process.env.NODE_ENV === "production" ? true : false} button
-                      onClick={() => setCurrentPage(() => PAGES.BULBS)}>
+                      onClick={() => setCurrentPage(() => process.env.NODE_ENV === "production" ? PAGES.TEMPERATURES : PAGES.BULBS)}>
               <ListItemIcon>
                 <EmojiObjectsIcon/>
               </ListItemIcon>
