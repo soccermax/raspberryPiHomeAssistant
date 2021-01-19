@@ -246,7 +246,6 @@ export default function Dashboard({ user }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  console.log(process.env.NODE_ENV);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fixedHeightPaperBulbs = clsx(classes.paper, classes.fixedHeightBulbs);
 
