@@ -35,6 +35,8 @@ import LayersIcon from "@material-ui/icons/Layers";
 import axios from "axios";
 import Skeleton from "@material-ui/lab/Skeleton";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Image from "material-ui-image";
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from "@material-ui/core";
 
 const drawerWidth = 240;
 
@@ -147,11 +149,27 @@ const useStyles = makeStyles((theme) => ({
   fixedHeightBulbs: {
     height: 530
   },
-
+  fixedHeightBulbFlows: {
+    height: 230,
+    width: 450
+  },
   loadingIndicator: {
     margin: "auto"
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2)
   }
 }));
+
+const startFlow = async (flowId, setLightSceneState) => {
+  if (!flowId || flowId === "") return
+  await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/startFlow/${flowId}`);
+  setLightSceneState(flowId);
+};
 
 const TemperaturesComponent = ({ classes, fixedHeightPaper, isFetching, temperaturesState }) => {
   return (
@@ -203,7 +221,17 @@ const LoadingIndicator = () => {
     </Grid>);
 };
 
-const Bulbs = ({ classes, fixedHeightPaper, isFetching, bulbs, setBulbs, isFetchingBulbs }) => {
+const Bulbs = ({
+                 classes,
+                 fixedHeightPaper,
+                 isFetching,
+                 bulbs,
+                 setBulbs,
+                 isFetchingBulbs,
+                 fixedHeightBulbFlows,
+                 lightSceneState,
+                 setLightSceneState
+               }) => {
   if (isFetchingBulbs) {
     return <LoadingIndicator/>;
   }
@@ -222,6 +250,49 @@ const Bulbs = ({ classes, fixedHeightPaper, isFetching, bulbs, setBulbs, isFetch
           );
         })}
       </Grid>
+      <Grid container spacing={3} direction="row" alignItems="center" justify="center">
+        {/* Bulbs */}
+        {bulbs.length > 0 &&
+        <Grid style={{ "max-width": "100%" }} item xs={12} md={4} lg={3}>
+          <Paper className={fixedHeightBulbFlows}>
+            <Grid container style={{ height: "100%" }} spacing={3} direction="row" alignItems="center" justify="center">
+              <Grid item align={"Center"} xs={6}>
+                <div style={{ width: "200px", height: "200px" }}>
+                  <Image color={""} imageStyle={{ width: "200px", height: "200px" }}
+                         src="https://imgaz2.staticbg.com/thumb/large/oaupload/banggood/images/9D/32/a4bc7601-d20c-4427-a620-8409171b4211.jpg.webp"/>
+                </div>
+              </Grid>
+              <Grid item align="center" xs={6}>
+                {/*<Image*/}
+                {/*  src="https://imgaz2.staticbg.com/thumb/large/oaupload/banggood/images/9D/32/a4bc7601-d20c-4427-a620-8409171b4211.jpg.webp"/>*/}
+                <FormControl className={classes.formControl}>
+                  <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+                    Light Scenes
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-placeholder-label-label"
+                    id="demo-simple-select-placeholder-label"
+                    value={lightSceneState}
+                    onChange={(event) => {
+                      startFlow(event.target.value, setLightSceneState)
+                    }}
+                    displayEmpty
+                    className={classes.selectEmpty}
+                  >
+                    <MenuItem value="noneFlow">
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value={"movieLightFlow"}>Movie Light</MenuItem>
+                    <MenuItem value={"builderLightFlow"}>Builder Light</MenuItem>
+                    <MenuItem value={"escalationModeFlow"}>Escalation Mode</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
+        }
+      </Grid>
       <Box pt={4}>
         <Copyright/>
       </Box>
@@ -238,7 +309,7 @@ export default function Dashboard({ user }) {
   const classes = useStyles();
   const db = firebase.firestore();
   const [open, setOpen] = React.useState(false);
-  const [currentPage, setCurrentPage] = React.useState(PAGES.TEMPERATURES);
+  const [currentPage, setCurrentPage] = React.useState(PAGES.BULBS);
   const [bulbs, setBulbs] = React.useState([]);
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -248,10 +319,13 @@ export default function Dashboard({ user }) {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fixedHeightPaperBulbs = clsx(classes.paper, classes.fixedHeightBulbs);
+  const fixedHeightBulbFlows = clsx(classes.paper, classes.fixedHeightBulbFlows);
 
   const [isFetching, setIsFetching] = useState(true);
   const [isFetchingBulbs, setIsFetchingBulbs] = useState(true);
   const [temperaturesState, setTemperaturesState] = useState([]);
+  const [lightSceneState, setLightSceneState] = useState("");
+
   useEffect(() => {
     const fetchData = async () => {
       const temperaturesData = [];
@@ -357,10 +431,13 @@ export default function Dashboard({ user }) {
           <Bulbs
             classes={classes}
             fixedHeightPaper={fixedHeightPaperBulbs}
+            fixedHeightBulbFlows={fixedHeightBulbFlows}
             isFetching={isFetching}
             bulbs={bulbs}
             setBulbs={setBulbs}
             isFetchingBulbs={isFetchingBulbs}
+            lightSceneState={lightSceneState}
+            setLightSceneState={setLightSceneState}
           />
         )}
       </main>

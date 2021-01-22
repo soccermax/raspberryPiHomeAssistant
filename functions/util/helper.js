@@ -8,6 +8,7 @@ const execFileAsync = promisify(execFile);
 const BASE_PATH_SCRIPTS = path.resolve(__dirname, "../", "bin");
 
 const runPythonScript = async (scriptName, ...args) => {
+  console.log(scriptName);
   try {
     return (await execFileAsync("python3", [path.resolve(BASE_PATH_SCRIPTS, scriptName), ...args])).stdout;
   } catch (err) {
